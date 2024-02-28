@@ -8,5 +8,28 @@
 </head>
 <body>
   <div id="app">hello</div>
+  <script src="dist/vue.js"></script>
+  <script>
+    let vm = new Vue({
+      el:'#app',
+      data(){
+        return {
+          msg:'hello',
+          a: {b:1},
+          arr:[1,2,3],
+          list:[{
+            a:{
+              m:2
+            }
+          }]
+        }
+      }
+    })
+
+    vm.arr.push({a:1})
+    
+    console.log('%c 🍍 vm: ', 'font-size:20px;background-color: #33A5FF;color:#fff;', vm._data);
+    
+  </script>
 </body>
 </html>
