@@ -1,10 +1,9 @@
 var defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g;
 
 export function generate(el) {
-  console.log('%c 🥞 el: ', 'font-size:20px;background-color: #2EAFB0;color:#fff;', el);
   let children = genChildren(el.children)
-  let code = `_c(${el.tag},${el.attrs.length ? genPorps(el.attrs) : 'null'},${children? children:'null'})`
-  console.log('%c 🍵 code: ', 'font-size:20px;background-color: #E41A6A;color:#fff;', code);
+  let code = `_c('${el.tag}',${el.attrs.length ? `{ ${genPorps(el.attrs)} }` : 'null'},${children? children:'null'})`
+  return code
 }
 
 function genChildren(children) {
@@ -23,6 +22,25 @@ function gen(node) {
     if (!defaultTagRE.test(text)) {
       return `_v(${JSON.stringify(text)})`
     }
+
+    let tokens = []
+    let lastIndex = defaultTagRE.lastIndex = 0
+    let match
+
+    while(match = defaultTagRE.exec(text)){
+      let index = match.index
+      if(index > lastIndex){
+        tokens.push(JSON.stringify(text.slice(lastIndex,index)))
+      }
+      tokens.push(`_s(${match[1].trim()})`)
+      lastIndex = index + match[0].length
+    }
+
+    if(lastIndex < text.length){
+      tokens.push(JSON.stringify(text.slice(lastIndex)))
+    }
+
+    return `_v(${tokens.join('+')})`
   }
 }
 

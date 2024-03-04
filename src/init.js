@@ -1,5 +1,12 @@
-import { compileToFunction } from "./compile/index"
-import { initState } from "./initState"
+import {
+  compileToFunction
+} from "./compile/index"
+import {
+  initState
+} from "./initState"
+import {
+  mounetComponent
+} from "./lifecycle"
 
 export function initMixin(Vue) {
   Vue.prototype._init = function (options) {
@@ -9,21 +16,25 @@ export function initMixin(Vue) {
 
     initState(vm)
 
-    if(vm.$options.el){
+    if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }
   }
 
-  Vue.prototype.$mount = function (el){
+  Vue.prototype.$mount = function (el) {
     const vm = this
     el = document.querySelector(el)
     const options = vm.$options
-    if(!options.render){
+    if (!options.render) {
       const template = options.template
-      if(!template && el){
+      if (!template && el) {
         el = el.outerHTML
-        const ast = compileToFunction(el)
+        const render = compileToFunction(el)
+
+        options.render = render
       }
     }
+
+    mounetComponent(vm, el)
   }
 }

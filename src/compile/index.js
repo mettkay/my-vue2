@@ -7,4 +7,6 @@ export function compileToFunction(el) {
 
   //把ast语法树转换成render函数
   let code = generate(ast)
+  let render = new Function(`with(this){return ${code} }`)
+  return render
 }

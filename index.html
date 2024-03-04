@@ -7,7 +7,7 @@
   <title>Document</title>
 </head>
 <body>
-  <div id="app" style="color:red;font-size:25px">hello <h1>嗡嗡嗡</h1> </div>
+  <div id="app" key="1" style="color:red;font-size:25px">hello {{msg}} aaa {{ss}} <h1>www</h1> </div>
   <script src="dist/vue.js"></script>
   <script>
     let vm = new Vue({
@@ -15,6 +15,7 @@
       data(){
         return {
           msg:'hello',
+          ss:'ssssss',
           a: {b:1},
           arr:[1,2,3],
           list:[{
@@ -27,9 +28,7 @@
     })
 
     vm.arr.push({a:1})
-    
-    console.log('%c 🍍 vm: ', 'font-size:20px;background-color: #33A5FF;color:#fff;', vm._data);
-    
+    console.log('%c 🍎 vm: ', 'font-size:20px;background-color: #E41A6A;color:#fff;', vm);
   </script>
 </body>
 </html>
