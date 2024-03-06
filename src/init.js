@@ -24,6 +24,7 @@ export function initMixin(Vue) {
   Vue.prototype.$mount = function (el) {
     const vm = this
     el = document.querySelector(el)
+    vm.$el = el
     const options = vm.$options
     if (!options.render) {
       const template = options.template

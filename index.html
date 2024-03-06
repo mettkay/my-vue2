@@ -10,6 +10,12 @@
   <div id="app" key="1" style="color:red;font-size:25px">hello {{msg}} aaa {{ss}} <h1>www</h1> </div>
   <script src="dist/vue.js"></script>
   <script>
+    Vue.Mixin({
+      created(){
+        
+      }
+    })
+
     let vm = new Vue({
       el:'#app',
       data(){

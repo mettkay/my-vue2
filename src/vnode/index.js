@@ -2,7 +2,6 @@ export function renderMixin(Vue) {
 
   //标签
   Vue.prototype._c = function () {
-    console.log('%c 🍛 arguments: ', 'font-size:20px;background-color: #465975;color:#fff;', arguments);
     return createElment(...arguments)
   }
 
@@ -20,7 +19,6 @@ export function renderMixin(Vue) {
     let vm = this
     let render = vm.$options.render
     let vnode = render.call(this)
-    console.log('%c 🍒 vnode: ', 'font-size:20px;background-color: #7F2B82;color:#fff;', vnode);
     return vnode
   }
 }
