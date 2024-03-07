@@ -5,17 +5,23 @@ import {
   initState
 } from "./initState"
 import {
+  callHook,
   mounetComponent
 } from "./lifecycle"
+import { mergeOptions } from "./utils/index"
 
 export function initMixin(Vue) {
   Vue.prototype._init = function (options) {
 
     const vm = this
-    vm.$options = options
-
+    vm.$options = mergeOptions(Vue.options,options)
+    
+    callHook(vm,'beforeCreate')
+    
     initState(vm)
 
+    callHook(vm,'created')
+    
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }
