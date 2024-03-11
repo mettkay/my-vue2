@@ -1,5 +1,7 @@
 // watcher 实现 数据更新
 
+import { pushTarget } from "./dep"
+
 class Watcher {
   constructor(vm, updataComponent, cb, options) {
     this.vm = vm
@@ -14,6 +16,14 @@ class Watcher {
     this.get()
   }
   get() {
+    
+    pushTarget(this)
+
+    this.getter()
+
+    popTarget()
+  }
+  updata(){
     this.getter()
   }
 }

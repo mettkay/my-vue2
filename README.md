@@ -14,3 +14,8 @@
 
 1. 与 vue.mixin() 注入的全局属性合并  options:{data:[] , created:[]}
 2. 通过 callHook 在不同时机触发
+
+## 收集依赖
+
+1. dep 收集依赖  与 data 的属性一一对应
+2. dep 与 watcher是1对多

@@ -1,4 +1,5 @@
 import { ArrayMethods } from "./arr"
+import Dep from "./dep"
 
 export function observer(data){
   if(typeof data !== 'object' || data === null){
@@ -42,6 +43,8 @@ function defineReactive(data,key,value){
   if(typeof value === 'object'){
     observer(value)
   }
+
+  let dep = new Dep()
 
   Object.defineProperty(data,key,{
     get(){
