@@ -88,7 +88,7 @@ function start(tag,attrs){
 
 //文本
 function charts(text){
-  text = text.trim()
+  text = text.replace(/\s/g,'')
   if(text){
     createParent.children.push({
       type:3,

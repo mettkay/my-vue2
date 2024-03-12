@@ -31,6 +31,8 @@ methods.forEach(item=>{
       ob.observeArray(inserted)
     }
 
+    ob.dep.notify()
+
     return result
   }
 })

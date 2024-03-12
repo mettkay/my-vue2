@@ -13,8 +13,11 @@ class Observer{
 
     Object.defineProperty(value,"__ob__",{
       enumerable:false,
+      configurable: true,
       value:this
     })
+
+    this.dep = new Dep()
 
     if(Array.isArray(value)){
       value.__proto__ = ArrayMethods
@@ -40,20 +43,25 @@ class Observer{
 }
 
 function defineReactive(data,key,value){
-  if(typeof value === 'object'){
-    observer(value)
-  }
+  let ob = observer(value)
 
   let dep = new Dep()
 
   Object.defineProperty(data,key,{
     get(){
+      if(Dep.target){
+        dep.depend()
+        if(ob?.dep){
+          ob.dep.depend()
+        }
+      }
       return value
     },
     set(newValue){
       if(newValue === value) return
       observer(newValue)
       value = newValue
+      dep.notify()
     }
   })
 }

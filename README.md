@@ -18,4 +18,4 @@
 ## 收集依赖
 
 1. dep 收集依赖  与 data 的属性一一对应
-2. dep 与 watcher是1对多
+2. dep 与 watcher 是多对多

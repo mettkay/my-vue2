@@ -1,53 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+
 <body>
-  <div id="app" key="1" style="color:red;font-size:25px">hello {{msg}} aaa {{ss}} <h1>www</h1> </div>
+  <div id="app" key="1" style="color:red;font-size:25px">
+    hello {{msg}} aaa {{ss}}
+    <h1>{{a.b}}</h1>
+    <h2>{{list}}</h2>
+  </div>
   <script src="dist/vue.js"></script>
   <script>
     Vue.Mixin({
-      created(){
-        
+      created() {
+
       }
     })
 
     Vue.Mixin({
-      updated(){
-        
+      updated() {
+
       }
     })
 
     let vm = new Vue({
-      el:'#app',
-      data(){
+      el: '#app',
+      data() {
         return {
-          msg:'hello',
-          ss:'ssssss',
-          a: {b:1},
-          arr:[1,2,3],
-          list:[{
-            a:{
-              m:2
+          msg: 'hello',
+          ss: 'ssssss',
+          aa: 'aaaaa',
+          a: {
+            b: 1
+          },
+          arr: [1, 2, 3],
+          list: [{
+            a: {
+              m: 2
             }
           }]
         }
       },
-      created(){
-        
+      created() {
+
       }
     })
 
-    vm.arr.push({a:1})
+    vm.arr.push({
+      a: 1
+    })
 
     setTimeout(() => {
       vm.msg = '啊啊啊啊啊啊啊啊啊啊'
+      vm.a.b = 'dwdwdw'
+      vm.list.push(1)
     }, 1000);
     console.log('%c 🍎 vm: ', 'font-size:20px;background-color: #E41A6A;color:#fff;', vm);
   </script>
 </body>
+
 </html>
