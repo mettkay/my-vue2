@@ -48,6 +48,20 @@
       },
       created() {
 
+      },
+      updated() {
+        // console.log('updated');
+      },
+      watch: {
+        msg(newValue, oldValue) {
+          console.log('newValue:', newValue);
+        },
+        aa:{
+          handler(){
+            console.log('111')
+          },
+          immediate:true
+        }
       }
     })
 
@@ -59,7 +73,14 @@
       vm.msg = '啊啊啊啊啊啊啊啊啊啊'
       vm.a.b = 'dwdwdw'
       vm.list.push(1)
+
+      vm.$nextTick(() => {
+
+      })
     }, 1000);
+
+
+
     console.log('%c 🍎 vm: ', 'font-size:20px;background-color: #E41A6A;color:#fff;', vm);
   </script>
 </body>

@@ -1,5 +1,6 @@
 import { initGlobApi } from "./global-api/index"
 import { initMixin } from "./init"
+import { stateMixin } from "./initState"
 import { lifecycleMixin } from "./lifecycle"
 import { renderMixin } from "./vnode/index"
 
@@ -15,5 +16,7 @@ lifecycleMixin(Vue) //生命周期
 renderMixin(Vue) //虚拟dom
 
 initGlobApi(Vue) //全局方法
+
+stateMixin(Vue) //给 vm 添加 nextTick
 
 export default Vue

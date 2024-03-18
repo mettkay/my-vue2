@@ -1,5 +1,6 @@
 // watcher 实现 数据更新
 
+import { nextTick } from "../utils/nextTick"
 import { popTarget, pushTarget } from "./dep"
 
 class Watcher {
@@ -19,7 +20,7 @@ class Watcher {
     this.get()
   }
   get() {
-    
+
     pushTarget(this)
 
     this.getter()
@@ -27,14 +28,18 @@ class Watcher {
     popTarget()
   }
 
-  updata(){
+  run() {
+    this.get()
+  }
+
+  updata() {
     // this.get()
     queueWatcher(this)
   }
 
-  addDep(dep){
+  addDep(dep) {
     let id = dep.id
-    if(!this.depsId.has(id)){
+    if (!this.depsId.has(id)) {
       this.depsId.add(id)
       this.deps.push(dep)
       dep.addSub(this)
@@ -46,19 +51,24 @@ let queue = []
 let has = {}
 let pending = false
 
-function queueWatcher(watcher){
+function flushWatcher() {
+  queue.forEach(e => { e.run(); e.cb() });
+  queue = []
+  has = {}
+  pending = false
+}
+
+function queueWatcher(watcher) {
   let id = watcher.id
-  if(!has[id]){
+  if (!has[id]) {
     queue.push(watcher)
     has[id] = 0
 
-    if(!pending){
-      setTimeout(() => {
-        
-      }, 0);
+    if (!pending) {
+      nextTick(flushWatcher)
+      pending = true
     }
   }
-  console.log('%c 🍰 id: ', 'font-size:20px;background-color: #EA7E5C;color:#fff;', id);
 }
 
 export default Watcher
