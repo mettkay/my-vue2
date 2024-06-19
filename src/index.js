@@ -9,7 +9,7 @@ function Vue(options){
   this._init(options)
 }
 
-initMixin(Vue)
+initMixin(Vue) //初始化mixin
 
 lifecycleMixin(Vue) //生命周期
 

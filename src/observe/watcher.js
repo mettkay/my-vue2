@@ -4,32 +4,50 @@ import { nextTick } from "../utils/nextTick"
 import { popTarget, pushTarget } from "./dep"
 
 class Watcher {
-  constructor(vm, updataComponent, cb, options) {
+  constructor(vm, exprOrfn, cb, options) {
     this.id = 0
     this.vm = vm
-    this.exprOrfn = updataComponent
+    this.exprOrfn = exprOrfn
     this.cb = cb
     this.options = options
+    this.user = !!options.user
     this.deps = []
     this.depsId = new Set()
 
-    if (typeof updataComponent === 'function') {
-      this.getter = updataComponent
+    if (typeof exprOrfn === 'function') {
+      this.getter = exprOrfn
+    } else {
+      this.getter = function () {
+        let path = exprOrfn.split('.')
+        let obj = vm
+        for (let i = 0; i < path.length; i++) {
+          obj = obj[path[i]]
+        }
+        return obj
+      }
     }
 
-    this.get()
+    this.value = this.get()
   }
   get() {
 
     pushTarget(this)
 
-    this.getter()
+    let value = this.getter()
 
     popTarget()
+
+    return value
   }
 
   run() {
-    this.get()
+    let value = this.get()
+    let oldValue = this.value
+    this.value = value
+
+    if(this.user){
+      this.cb.call(this.vm,value,oldValue)
+    }
   }
 
   updata() {
@@ -52,7 +70,7 @@ let has = {}
 let pending = false
 
 function flushWatcher() {
-  queue.forEach(e => { e.run(); e.cb() });
+  queue.forEach(e => { e.run() });
   queue = []
   has = {}
   pending = false

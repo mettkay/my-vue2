@@ -25,3 +25,9 @@
 1. 当数据数据发生变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据改变。
 2. 如果同一个 watcher 被多次触发，只会被推入到队列中一次。
 3. 然后，在下一个的事件循环“tick”中，Vue 执行队列里的所有回调。
+
+## watch原理
+
+1. 初始化遍历传入的watch对象，调用createWatcher创建Watcher
+2. watcher对象记录初始值，把自己添加到监听属性的dep上
+3. 当数据发生变化，依次触发watcher，用watcher上记录的旧值和新值调用watch对象传入的handler

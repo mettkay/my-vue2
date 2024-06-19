@@ -11,7 +11,9 @@
 <body>
   <div id="app" key="1" style="color:red;font-size:25px">
     hello {{msg}} aaa {{ss}}
-    <h1>{{a.b}}</h1>
+    <h1>{{a.b.c}}</h1>
+    <h1>{{arr}}</h1>
+    <h1>{{arr}}</h1>
     <h2>{{list}}</h2>
   </div>
   <script src="dist/vue.js"></script>
@@ -36,7 +38,11 @@
           ss: 'ssssss',
           aa: 'aaaaa',
           a: {
-            b: 1
+            b: {
+              c:{
+                d:1
+              }
+            }
           },
           arr: [1, 2, 3],
           list: [{
@@ -55,12 +61,19 @@
       watch: {
         msg(newValue, oldValue) {
           console.log('newValue:', newValue);
+          console.log('oldValue:', oldValue);
+        },
+        'a.b.c.d':{
+          handler(){
+            this.ss = 222
+            console.log(this.ss)
+          }
         },
         aa:{
           handler(){
             console.log('111')
           },
-          immediate:true
+          // immediate:true
         }
       }
     })
@@ -71,7 +84,7 @@
 
     setTimeout(() => {
       vm.msg = '啊啊啊啊啊啊啊啊啊啊'
-      vm.a.b = 'dwdwdw'
+      // vm.a.b.c.d = 'dwdwdw'
       vm.list.push(1)
 
       vm.$nextTick(() => {
