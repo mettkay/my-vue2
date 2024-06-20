@@ -31,3 +31,9 @@
 1. 初始化遍历传入的watch对象，调用createWatcher创建Watcher
 2. watcher对象记录初始值，把自己添加到监听属性的dep上
 3. 当数据发生变化，依次触发watcher，用watcher上记录的旧值和新值调用watch对象传入的handler
+
+## diff算法
+
+1. 用旧的虚拟dom和新的虚拟dom进行比对，更新不同的地方，优化更新效率
+2. 
+3. 
