@@ -30,7 +30,7 @@ export function patch(oldVnode, vnode) {
     let newChildren = vnode.children || []
 
     if (oldChildren.length > 0 && newChildren.length > 0) {
-      updateChild(oldChildren,newChildren,el)
+      updateChild(oldChildren, newChildren, el)
     } else if (oldChildren.length > 0) {
       el.innerHTML = ''
     } else if (newChildren.length > 0) {
@@ -46,8 +46,37 @@ export function patch(oldVnode, vnode) {
 
 }
 
-function updateChild(oldChildren,newChildren,el){
-  
+function updateChild(oldChildren, newChildren, el) {
+  let oldStartIndex = 0
+  let oldStartVnode = oldChildren[oldStartIndex]
+  let oldEndIndex = 0
+  let oldEndVnode = oldChildren[oldEndIndex]
+
+  let newStartIndex = 0
+  let newStartVnode = newChildren[newStartIndex]
+  let newEndIndex = 0
+  let newEndVnode = newChildren[newEndIndex]
+
+  while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
+
+    if (isSameVnode(oldStartVnode, newStartVnode)) {
+      patch(oldStartVnode, newStartVnode)
+
+      oldStartVnode = oldChildren[++oldStartIndex]
+      newStartVnode = newChildren[++newStartIndex]
+    }
+
+  }
+
+  if (newStartIndex <= newEndIndex) {
+    for (let i = newStartIndex; i < newEndIndex; i++) {
+      el.parent.appendChild(createEl(newChildren[i]))
+    }
+  }
+}
+
+function isSameVnode(oldVnode, newVnode) {
+  return oldVnode.tag === newVnode.tag && oldVnode.key === newVnode.key
 }
 
 function updateRpors(vnode, oldProps = {}) {
@@ -74,7 +103,7 @@ function updateRpors(vnode, oldProps = {}) {
   }
 }
 
-function createEl(vnode) {
+export function createEl(vnode) {
   let { tag, children, key, data, text } = vnode
 
   if (typeof tag === 'string') {
