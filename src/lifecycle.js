@@ -21,7 +21,13 @@ export function mounetComponent(vm, el) {
 export function lifecycleMixin(Vue) {
   Vue.prototype._updata = function (vnode) {
     let vm = this
-    vm.$el = patch(vm.$el,vnode)
+    let prevVnode = vm._vnode
+    if(!prevVnode){
+      vm.$el = patch(vm.$el,vnode)
+      vm._vnode = vnode
+    }else{
+      patch(prevVnode,vnode)
+    }
   }
 }
 

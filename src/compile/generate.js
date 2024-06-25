@@ -2,7 +2,7 @@ var defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g;
 
 export function generate(el) {
   let children = genChildren(el.children)
-  let code = `_c('${el.tag}',${el.attrs.length ? `{ ${genPorps(el.attrs)} }` : 'null'},${children? children:'null'})`
+  let code = `_c('${el.tag}',${el.attrs.length ? `{ ${genPorps(el.attrs)} }` : 'null'},${children? children:''})`
   return code
 }
 

@@ -11,6 +11,11 @@ var conditionalComment = /^<!\[/;
 
 
 export function parseHtml(html) {
+
+  let root,createParent
+  let stack = []
+
+
   while (html) {
     let textEnd = html.indexOf('<')
     if (textEnd === 0) {
@@ -36,6 +41,38 @@ export function parseHtml(html) {
       }
     }
     
+  }
+
+  //开始标签
+  function start(tag,attrs){
+    let element = createASTElement(tag,attrs)
+    if(!root){
+      root = element
+    }
+    createParent = element
+    stack.push(element)
+  }
+
+  //文本
+  function charts(text){
+    text = text.replace(/\s/g,'')
+    if(text){
+      createParent.children.push({
+        type:3,
+        text
+      })
+    }
+  }
+
+
+  //结束标签
+  function end(tag){
+    let element = stack.pop()
+    createParent = stack[stack.length-1]
+    if(createParent){
+      element.parent = createParent
+      createParent.children.push(element)
+    }
   }
 
   function parseStartTag() {
@@ -68,45 +105,11 @@ export function parseHtml(html) {
   function advance(len) {
     html = html.substring(len)
   }
+  
 
   return root
 }
 
-
-let root,createParent
-let stack = []
-
-//开始标签
-function start(tag,attrs){
-  let element = createASTElement(tag,attrs)
-  if(!root){
-    root = element
-  }
-  createParent = element
-  stack.push(element)
-}
-
-//文本
-function charts(text){
-  text = text.replace(/\s/g,'')
-  if(text){
-    createParent.children.push({
-      type:3,
-      text
-    })
-  }
-}
-
-
-//结束标签
-function end(tag){
-  let element = stack.pop()
-  createParent = stack[stack.length-1]
-  if(createParent){
-    element.parent = createParent
-    createParent.children.push(element)
-  }
-}
 
 function createASTElement(tag,attrs){
   return {

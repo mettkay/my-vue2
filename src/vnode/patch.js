@@ -1,6 +1,4 @@
 export function patch(oldVnode, vnode) {
-  console.log('vnode:', vnode);
-  console.log('oldVnode:', oldVnode);
 
   if (oldVnode.nodeType == 1) {
     let el = createEl(vnode)
@@ -46,31 +44,84 @@ export function patch(oldVnode, vnode) {
 
 }
 
-function updateChild(oldChildren, newChildren, el) {
+function updateChild(oldChildren, newChildren, parent) {
   let oldStartIndex = 0
   let oldStartVnode = oldChildren[oldStartIndex]
-  let oldEndIndex = 0
+  let oldEndIndex = oldChildren.length - 1
   let oldEndVnode = oldChildren[oldEndIndex]
 
   let newStartIndex = 0
   let newStartVnode = newChildren[newStartIndex]
-  let newEndIndex = 0
+  let newEndIndex = newChildren.length - 1
   let newEndVnode = newChildren[newEndIndex]
+
+  let oldMap = {}
+  oldChildren.forEach((item, index) => {
+    if (item.key) {
+      oldMap[item.key] = index
+    }
+  })
 
   while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
 
     if (isSameVnode(oldStartVnode, newStartVnode)) {
+      //新前比旧前
       patch(oldStartVnode, newStartVnode)
 
       oldStartVnode = oldChildren[++oldStartIndex]
       newStartVnode = newChildren[++newStartIndex]
-    }
+    } else if (isSameVnode(oldEndVnode, newEndVnode)) {
+      //新后比旧后
+      patch(oldEndVnode, newEndVnode)
 
+      oldEndVnode = oldChildren[--oldEndIndex]
+      newEndVnode = newChildren[--newEndIndex]
+    } else if (isSameVnode(oldStartVnode, newEndVnode)) {
+      //新后比旧前
+      patch(oldStartVnode, newEndVnode)
+
+      oldStartVnode = oldChildren[++oldStartIndex]
+      newEndVnode = newChildren[--newEndIndex]
+    } else if (isSameVnode(oldEndVnode, newStartVnode)) {
+      //新前比旧后
+      patch(oldEndVnode, newStartVnode)
+
+      oldEndVnode = oldChildren[--oldEndIndex]
+      newStartVnode = newChildren[++newStartIndex]
+    } else {
+      //暴力比对
+
+      let moveIndex = oldMap[newStartVnode.key]
+
+      if (moveIndex === undefined) {
+        parent.insertBefore(createEl(newStartVnode), oldStartVnode.el)
+      } else {
+        let moveVnode = oldChildren[moveIndex]
+        oldChildren[moveIndex] = null
+        parent.insertBefore(moveVnode.el, oldStartVnode.el)
+        patch(moveVnode, newStartVnode)
+      }
+
+      newStartVnode = newChildren[++newStartIndex]
+
+    }
   }
 
+  //添加新的多余的元素
   if (newStartIndex <= newEndIndex) {
-    for (let i = newStartIndex; i < newEndIndex; i++) {
-      el.parent.appendChild(createEl(newChildren[i]))
+    let el = parent.children[newStartIndex] || null
+    for (let i = newStartIndex; i <= newEndIndex; i++) {
+      parent.insertBefore(createEl(newChildren[i]), el)
+    }
+  }
+
+  //删除旧的多余的元素
+  if (oldStartIndex <= oldEndIndex) {
+    for (let i = oldStartIndex; i <= oldEndIndex; ++i) {
+      let child = oldChildren[i]
+      if (child != null) {
+        parent.removeChild(child.el)
+      }
     }
   }
 }
@@ -88,6 +139,16 @@ function updateRpors(vnode, oldProps = {}) {
       el.removeAttribute(key)
     }
   }
+
+  let newStyle = newProps.style || {}
+  let oldStyle = oldProps?.style || {}
+
+  for (const key in oldStyle) {
+    if (!newStyle[key]) {
+      el.style[key] = ''
+    }
+  }
+
 
   for (const key in newProps) {
     if (key === 'style') {
@@ -108,7 +169,7 @@ export function createEl(vnode) {
 
   if (typeof tag === 'string') {
     vnode.el = document.createElement(tag)
-    updateRpors(vnode,)
+    updateRpors(vnode)
     if (children.length > 0) {
       children.forEach(e => {
         vnode.el.appendChild(createEl(e))

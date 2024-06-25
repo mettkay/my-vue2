@@ -86,9 +86,6 @@ export function stateMixin(Vue) {
   }
 
   Vue.prototype.$watch = function (vm,exprOrfn, handler, options={}) {
-    // console.log('exprOrfn:', exprOrfn);
-    // console.log('handler:', handler);
-    // console.log('options:', options);
 
     new Watcher(vm,exprOrfn,handler,{...options,user:true})
     
