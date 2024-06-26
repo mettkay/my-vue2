@@ -16,7 +16,7 @@ class Dep{
 
   notify(){
     this.subs.forEach(watcher=>{
-      watcher.updata()
+      watcher.update()
     })
   }
 }

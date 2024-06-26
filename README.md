@@ -37,3 +37,8 @@
 1. 用旧的虚拟dom和新的虚拟dom进行比对。
 2. 对比流程：前前——后后——交叉——暴力
 3. 添加多余的新vdom节点，删除多余的旧vdom节点
+
+## computed计算属性
+
+1. 通过 object.defineProperty 把computed的属性代理到vue实例
+2. 给每一个 computed 属性创建 watcher 通过lazy属性实现懒加载 通过dirty属性实现缓存

@@ -13,6 +13,8 @@ class Watcher {
     this.user = !!options.user
     this.deps = []
     this.depsId = new Set()
+    this.lazy = options.lazy
+    this.dirty = this.lazy
 
     if (typeof exprOrfn === 'function') {
       this.getter = exprOrfn
@@ -27,13 +29,13 @@ class Watcher {
       }
     }
 
-    this.value = this.get()
+    this.value = this.lazy ? void 0 : this.get()
   }
   get() {
 
     pushTarget(this)
 
-    let value = this.getter()
+    let value = this.getter.call(this.vm);
 
     popTarget()
 
@@ -45,14 +47,18 @@ class Watcher {
     let oldValue = this.value
     this.value = value
 
-    if(this.user){
-      this.cb.call(this.vm,value,oldValue)
+    if (this.user) {
+      this.cb.call(this.vm, value, oldValue)
     }
   }
 
-  updata() {
-    // this.get()
-    queueWatcher(this)
+  update() {
+    if (this.lazy) {
+      this.dirty = true;
+    }
+    else {
+      queueWatcher(this);
+    }
   }
 
   addDep(dep) {
@@ -62,6 +68,11 @@ class Watcher {
       this.deps.push(dep)
       dep.addSub(this)
     }
+  }
+
+  evaluate() {
+    this.value = this.get();
+    this.dirty = false
   }
 }
 

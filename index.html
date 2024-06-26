@@ -10,10 +10,11 @@
 
 <body>
   <div id="app" key="1" style="color:red;font-size:25px">
-    hello aaa {{ss}}
-    <h1>{{a.b.c}}</h1>
-    <h2>{{list}}</h2>
+    hello
+    <h1>{{aa}}</h1>
+    <h2>{{ss}}</h2>
     <h2>{{msg}}</h2>
+    <h2>{{fullName}}</h2>
   </div>
   <script src="dist/vue.js"></script>
   <script>
@@ -38,8 +39,8 @@
           aa: 'aaaaa',
           a: {
             b: {
-              c:{
-                d:1
+              c: {
+                d: 1
               }
             }
           },
@@ -57,19 +58,24 @@
       updated() {
         // console.log('updated');
       },
+      computed: {
+        fullName() {
+          return {aa:this.aa,ss:this.ss}
+        }
+      },
       watch: {
         msg(newValue, oldValue) {
           // console.log('newValue:', newValue);
           // console.log('oldValue:', oldValue);
         },
-        'a.b.c.d':{
-          handler(){
+        'a.b.c.d': {
+          handler() {
             this.ss = 222
             console.log(this.ss)
           }
         },
-        aa:{
-          handler(){
+        aa: {
+          handler() {
             // console.log('111')
           },
           // immediate:true
@@ -79,6 +85,7 @@
 
     setTimeout(() => {
       vm.msg = '啊啊啊啊啊啊啊啊啊啊'
+      vm.ss = 222
       // vm.a.b.c.d = 'dwdwdw'
       // vm.list.push(1)
 

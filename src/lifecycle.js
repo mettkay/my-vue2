@@ -6,12 +6,12 @@ export function mounetComponent(vm, el) {
   callHook(vm,'beforeMounet')
 
   //  _render() 将render函数变成vnode
-  //  _updata() 将vnode变成真实dom 挂载到页面
-  let updataComponent = ()=>{
-    vm._updata(vm._render())
+  //  _update() 将vnode变成真实dom 挂载到页面
+  let updateComponent = ()=>{
+    vm._update(vm._render())
   }
 
-  new Watcher(vm,updataComponent,()=>{
+  new Watcher(vm,updateComponent,()=>{
     callHook(vm,'updated')
   },true)
 
@@ -19,7 +19,7 @@ export function mounetComponent(vm, el) {
 }
 
 export function lifecycleMixin(Vue) {
-  Vue.prototype._updata = function (vnode) {
+  Vue.prototype._update = function (vnode) {
     let vm = this
     let prevVnode = vm._vnode
     if(!prevVnode){

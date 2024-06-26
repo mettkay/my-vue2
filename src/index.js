@@ -1,10 +1,8 @@
-import { compileToFunction } from "./compile/index"
 import { initGlobApi } from "./global-api/index"
 import { initMixin } from "./init"
 import { stateMixin } from "./initState"
 import { lifecycleMixin } from "./lifecycle"
 import { renderMixin } from "./vnode/index"
-import { patch, createEl } from "./vnode/patch"
 
 
 function Vue(options) {

@@ -16,11 +16,15 @@ let starts = {}
 starts.data = function(parentVal,childVal){
   return childVal
 }
-starts.computed = function(){}
+starts.computed = function(parentVal,childVal){
+  return childVal
+}
 starts.watch = function(parentVal,childVal){
   return childVal
 }
-starts.methods = function(){}
+starts.methods = function(parentVal,childVal){
+  return childVal
+}
 
 HOOKS.forEach(hook=>{
   starts[hook] = mergeHook

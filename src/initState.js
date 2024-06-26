@@ -4,6 +4,7 @@ import Watcher from "./observe/watcher"
 
 export function initState(vm) {
   let opts = vm.$options
+  console.log('opts:', opts);
 
   if (opts.data) {
     initData(vm)
@@ -15,6 +16,10 @@ export function initState(vm) {
 
   if (opts.watch) {
     initWatch(vm)
+  }
+
+  if (opts.computed) {
+    initComputed(vm)
   }
 
 }
@@ -33,6 +38,44 @@ function initData(vm) {
   observer(data)
 }
 
+
+function initComputed(vm) {
+  let computed = vm.$options.computed
+
+  let watcher = vm._computedWatchers = {}
+
+  for (let key in computed) {
+    let userDef = computed[key]
+    let getter = typeof userDef === 'function' ? userDef : userDef.get
+    watcher[key] = new Watcher(vm, getter, () => { }, { lazy: true })
+    defineComputed(vm, key, userDef)
+  }
+}
+
+function defineComputed(vm, key, userDef) {
+  let sharedPropDefinition = {
+    configurable: true,
+    enumerable: true
+  }
+
+  if (typeof userDef === 'function') {
+    sharedPropDefinition.get = createComputedGetter(key)
+  } else {
+    sharedPropDefinition.get = createComputedGetter(key)
+    sharedPropDefinition.set = userDef.set
+  }
+  Object.defineProperty(vm, key, sharedPropDefinition)
+}
+
+function createComputedGetter(key) {
+  return function () {
+    let watcher = this._computedWatchers[key]
+    if (watcher?.dirty) {
+      watcher.evaluate()
+    }
+    return watcher.value
+  }
+}
 
 function initProps(vm) {
 
@@ -65,7 +108,7 @@ function createWatcher(vm, exprOrfn, handler, options) {
     handler = vm[handler]
   }
 
-  return vm.$watch(vm,exprOrfn, handler, options)
+  return vm.$watch(vm, exprOrfn, handler, options)
 }
 
 
@@ -85,11 +128,11 @@ export function stateMixin(Vue) {
     nextTick(cb)
   }
 
-  Vue.prototype.$watch = function (vm,exprOrfn, handler, options={}) {
+  Vue.prototype.$watch = function (vm, exprOrfn, handler, options = {}) {
 
-    new Watcher(vm,exprOrfn,handler,{...options,user:true})
-    
-    if(options.immediate){
+    new Watcher(vm, exprOrfn, handler, { ...options, user: true })
+
+    if (options.immediate) {
       handler.call(vm)
     }
   }
