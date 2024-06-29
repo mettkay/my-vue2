@@ -10,25 +10,28 @@
 
 <body>
   <div id="app" key="1" style="color:red;font-size:25px">
-    hello
-    <h1>{{aa}}</h1>
-    <h2>{{ss}}</h2>
-    <h2>{{msg}}</h2>
-    <h2>{{fullName}}</h2>
+    <my-button></my-button>
   </div>
   <script src="dist/vue.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
   <script>
-    Vue.Mixin({
-      created() {
 
+    Vue.component('my-button', {
+      template: `<button>{{bb}}</button>`,
+      data(){
+        return {
+          a:1
+        }
+      },
+      computed:{
+        bb(){
+          return this.a+1
+        }
       }
     })
 
-    Vue.Mixin({
-      updated() {
-
-      }
-    })
+    // let a = new Vue()
+    // console.log('a:', a);
 
     let vm = new Vue({
       el: '#app',
@@ -60,31 +63,31 @@
       },
       computed: {
         fullName() {
-          return {aa:this.aa,ss:this.ss}
+          return { aa: this.aa, ss: this.ss }
         }
       },
       watch: {
-        msg(newValue, oldValue) {
-          // console.log('newValue:', newValue);
-          // console.log('oldValue:', oldValue);
-        },
-        'a.b.c.d': {
-          handler() {
-            this.ss = 222
-            console.log(this.ss)
-          }
-        },
-        aa: {
-          handler() {
-            // console.log('111')
-          },
-          // immediate:true
-        }
+        // msg(newValue, oldValue) {
+        //   // console.log('newValue:', newValue);
+        //   // console.log('oldValue:', oldValue);
+        // },
+        // 'a.b.c.d': {
+        //   handler() {
+        //     this.ss = 222
+        //     console.log(this.ss)
+        //   }
+        // },
+        // aa: {
+        //   handler() {
+        //     // console.log('111')
+        //   },
+        //   // immediate:true
+        // }
       }
     })
 
     setTimeout(() => {
-      vm.msg = '啊啊啊啊啊啊啊啊啊啊'
+      // vm.msg = '啊啊啊啊啊啊啊啊啊啊'
       vm.ss = 222
       // vm.a.b.c.d = 'dwdwdw'
       // vm.list.push(1)

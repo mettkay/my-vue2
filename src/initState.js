@@ -1,10 +1,10 @@
 import { observer } from "./observe/index"
 import { nextTick } from "./utils/nextTick"
 import Watcher from "./observe/watcher"
+import Dep from "./observe/dep";
 
 export function initState(vm) {
   let opts = vm.$options
-  console.log('opts:', opts);
 
   if (opts.data) {
     initData(vm)
@@ -70,8 +70,13 @@ function defineComputed(vm, key, userDef) {
 function createComputedGetter(key) {
   return function () {
     let watcher = this._computedWatchers[key]
-    if (watcher?.dirty) {
-      watcher.evaluate()
+    if (watcher) {
+      if(watcher.dirty){
+        watcher.evaluate()
+      }
+      if(Dep.target){
+        watcher.depend()
+      }
     }
     return watcher.value
   }

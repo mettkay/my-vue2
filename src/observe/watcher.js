@@ -74,6 +74,13 @@ class Watcher {
     this.value = this.get();
     this.dirty = false
   }
+
+  depend() {
+    let i = this.deps.length;
+    while (i--) {
+      this.deps[i].depend();
+    }
+  };
 }
 
 let queue = []

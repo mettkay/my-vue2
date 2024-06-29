@@ -11,10 +11,12 @@ import {
 import { mergeOptions } from "./utils/index"
 
 export function initMixin(Vue) {
-  Vue.prototype._init = function (options) {
+  Vue.prototype._init = function (options = {}) {
+  console.log('options:', options);
 
     const vm = this
-    vm.$options = mergeOptions(Vue.options, options)
+    
+    vm.$options = mergeOptions(this.constructor.options, options)
 
     callHook(vm, 'beforeCreate')
 
@@ -28,18 +30,22 @@ export function initMixin(Vue) {
   }
 
   Vue.prototype.$mount = function (el) {
+
     const vm = this
     el = document.querySelector(el)
     vm.$el = el
     const options = vm.$options
     if (!options.render) {
       const template = options.template
+      let render
       if (!template && el) {
         el = el.outerHTML
-        const render = compileToFunction(el)
-
+        render = compileToFunction(el)
         options.render = render
+      }else{
+        render = compileToFunction(template)
       }
+      options.render = render
     }
 
     mounetComponent(vm, el)

@@ -1,5 +1,10 @@
 export function patch(oldVnode, vnode) {
 
+  if(!oldVnode){
+    createEl(vnode)
+    return
+  }
+
   if (oldVnode.nodeType == 1) {
     let el = createEl(vnode)
 
@@ -165,19 +170,39 @@ function updateRpors(vnode, oldProps = {}) {
 }
 
 export function createEl(vnode) {
-  let { tag, children, key, data, text } = vnode
-
+  
+  let { vm, tag, children, key, data, text } = vnode
+  
   if (typeof tag === 'string') {
-    vnode.el = document.createElement(tag)
-    updateRpors(vnode)
-    if (children.length > 0) {
-      children.forEach(e => {
-        vnode.el.appendChild(createEl(e))
-      });
+    if (createComponentEl(vnode)) {
+      vnode.componentInstance.$el = vnode.componentInstance._vnode.el
+      return vnode.componentInstance.$el
+    } else {
+      vnode.el = document.createElement(tag)
+      updateRpors(vnode)
+      if (children.length > 0) {
+        
+        children.forEach(e => {
+          vnode.el.appendChild(createEl(e))
+        });
+      }
     }
+
   } else {
     vnode.el = document.createTextNode(text)
   }
 
   return vnode.el
+}
+
+export function createComponentEl(vnode) {
+  let i = vnode.data
+  if ((i = i.hook) && (i = i.init)) {
+    i(vnode)
+  }
+
+  if(vnode.componentInstance){
+    return true
+  }
+  return false
 }

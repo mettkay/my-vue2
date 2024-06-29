@@ -42,3 +42,4 @@
 
 1. 通过 object.defineProperty 把computed的属性代理到vue实例
 2. 给每一个 computed 属性创建 watcher 通过lazy属性实现懒加载 通过dirty属性实现缓存
+3. 用栈的方式让 computed 的 watcher 和页面更新的 watcher 都与 data 属性里面的dep绑定
